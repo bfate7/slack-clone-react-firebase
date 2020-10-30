@@ -9,17 +9,26 @@ import Register from "./components/Register";
 import Main from "./components/Main";
 import { useEffect } from "react";
 import firebase from "./firebase";
+import store from "./store";
+import { connect, Provider } from "react-redux";
+import { setUser } from "./actions/userActions";
+import Spinner from "./components/Spinner";
 
 function App(props) {
+  console.log(props.isLoading);
+
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
+        props.setUser(user);
         props.history.push("/");
       }
     });
-  }, [props.history]);
+  }, []);
 
-  return (
+  return props.isLoading ? (
+    <Spinner />
+  ) : (
     <Switch>
       <Route path="/" component={Main} exact />
       <Route path="/login" component={Login} />
@@ -28,12 +37,18 @@ function App(props) {
   );
 }
 
-const AppWithRouter = withRouter(App);
+const mapStateToProps = (state) => ({
+  isLoading: state.user.isLoading,
+});
+
+const AppWithRouter = withRouter(connect(mapStateToProps, { setUser })(App));
 
 const AppWithAuth = () => (
-  <Router>
-    <AppWithRouter />
-  </Router>
+  <Provider store={store}>
+    <Router>
+      <AppWithRouter />
+    </Router>
+  </Provider>
 );
 
 export default AppWithAuth;
