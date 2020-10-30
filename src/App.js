@@ -11,7 +11,7 @@ import { useEffect } from "react";
 import firebase from "./firebase";
 import store from "./store";
 import { connect, Provider } from "react-redux";
-import { setUser } from "./actions/userActions";
+import { setUser, clearUser } from "./actions/userActions";
 import Spinner from "./components/Spinner";
 
 function App(props) {
@@ -22,6 +22,9 @@ function App(props) {
       if (user) {
         props.setUser(user);
         props.history.push("/");
+      } else {
+        props.clearUser();
+        props.history.push("/login");
       }
     });
   }, []);
@@ -41,7 +44,9 @@ const mapStateToProps = (state) => ({
   isLoading: state.user.isLoading,
 });
 
-const AppWithRouter = withRouter(connect(mapStateToProps, { setUser })(App));
+const AppWithRouter = withRouter(
+  connect(mapStateToProps, { setUser, clearUser })(App)
+);
 
 const AppWithAuth = () => (
   <Provider store={store}>
