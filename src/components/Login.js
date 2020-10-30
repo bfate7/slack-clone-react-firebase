@@ -10,7 +10,6 @@ import {
   Form,
   Message,
   Button,
-  Flag,
 } from "semantic-ui-react";
 
 const Login = () => {
