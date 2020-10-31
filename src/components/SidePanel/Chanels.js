@@ -4,9 +4,10 @@ import firebase from "../../firebase";
 
 const Chanels = (props) => {
   const [chanels, setChanels] = useState([]);
+
   useEffect(() => {
     ChanelsListner();
-  }, [chanels]);
+  }, [props]);
 
   const chanelsRef = firebase.database().ref("chanels");
 
@@ -61,7 +62,12 @@ const Chanels = (props) => {
   const displayChanels = () =>
     chanels.length > 0 &&
     chanels.map((chanel) => (
-      <Menu.Item key={chanel.id} name={chanel.name} style={{ opavity: "0.8" }}>
+      <Menu.Item
+        key={chanel.id}
+        name={chanel.name}
+        style={{ opavity: "0.8" }}
+        onClick={() => console.log(chanel)}
+      >
         # {chanel.name}
       </Menu.Item>
     ));
