@@ -15,13 +15,12 @@ import { setUser, clearUser } from "./actions/userActions";
 import Spinner from "./components/Spinner";
 
 function App(props) {
-  console.log(props.isLoading);
-
+  console.log("rendering ...");
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         props.setUser(user);
-        props.history.push("/");
+        return props.history.push("/");
       } else {
         props.clearUser();
         props.history.push("/login");
