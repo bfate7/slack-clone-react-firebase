@@ -15,7 +15,6 @@ import { setUser, clearUser } from "./actions/userActions";
 import Spinner from "./components/Spinner";
 
 function App(props) {
-  console.log("rendering ...");
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
