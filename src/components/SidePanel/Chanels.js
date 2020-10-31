@@ -1,16 +1,29 @@
 import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
 import { Button, Form, Icon, Menu, Modal } from "semantic-ui-react";
 import firebase from "../../firebase";
+import { setCurrentChanel } from "../../actions/chanelActions";
 
 const Chanels = (props) => {
+  //chanels firebase ref
+  const chanelsRef = firebase.database().ref("chanels");
+  //chanels state
   const [chanels, setChanels] = useState([]);
 
   useEffect(() => {
-    ChanelsListner();
-  }, [props]);
+    console.log("effect ran");
 
-  const chanelsRef = firebase.database().ref("chanels");
+    let loadedChanels = [];
+    chanelsRef.on("value", (snapshot) => {
+      const res = snapshot.val();
+      for (const id in res) {
+        loadedChanels.push(res[id]);
+      }
+      setChanels(loadedChanels);
+    });
+  }, []);
 
+  //modal state
   const [modal, setModal] = useState(false);
   const [chanel, setChanel] = useState({ chanelName: "", chanelDetails: "" });
 
@@ -24,8 +37,6 @@ const Chanels = (props) => {
     if ((!chanel.chanelName, !chanel.chanelDetails)) {
       return alert("err");
     }
-
-    //create ref
 
     const key = chanelsRef.push().key;
 
@@ -51,26 +62,20 @@ const Chanels = (props) => {
       .catch((err) => console.log(err));
   };
 
-  const ChanelsListner = () => {
-    const loadedChanels = [];
-    chanelsRef.on("child_added", (snap) => {
-      loadedChanels.push(snap.val());
-      setChanels(loadedChanels);
-    });
-  };
-
-  const displayChanels = () =>
+  const ChanelsList = () =>
     chanels.length > 0 &&
     chanels.map((chanel) => (
       <Menu.Item
         key={chanel.id}
         name={chanel.name}
         style={{ opavity: "0.8" }}
-        onClick={() => console.log(chanel)}
+        onClick={() => changeChanel(chanel)}
       >
         # {chanel.name}
       </Menu.Item>
     ));
+
+  const changeChanel = (chanel) => props.setCurrentChanel(chanel);
 
   return (
     <>
@@ -83,7 +88,7 @@ const Chanels = (props) => {
           {"  "}({chanels.length}){" "}
           <Icon name="add" onClick={() => setModal(true)} />
         </Menu.Item>
-        {displayChanels()}
+        <ChanelsList />
       </Menu.Menu>
       {/* add chanel modal */}
 
@@ -124,4 +129,4 @@ const Chanels = (props) => {
   );
 };
 
-export default Chanels;
+export default connect(null, { setCurrentChanel })(Chanels);
