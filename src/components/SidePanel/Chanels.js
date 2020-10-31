@@ -13,14 +13,15 @@ const Chanels = (props) => {
   useEffect(() => {
     console.log("effect ran");
 
-    let loadedChanels = [];
     chanelsRef.on("value", (snapshot) => {
+      const loadedChanels = [];
       const res = snapshot.val();
       for (const id in res) {
         loadedChanels.push(res[id]);
       }
       setChanels(loadedChanels);
     });
+    return () => chanelsRef.off();
   }, []);
 
   //modal state
