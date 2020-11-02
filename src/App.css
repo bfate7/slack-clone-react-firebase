@@ -4,3 +4,18 @@ body,
   height: 100vh;
   padding: 1em;
 }
+
+.messages {
+  height: 300px;
+  overflow-y: scroll;
+  margin-bottom: 0.6em;
+}
+
+.message__form {
+  position: fixed !important;
+  bottom: 1em;
+  margin-left: 320px !important;
+  left: 0;
+  right: 1em;
+  z-index: 200;
+}

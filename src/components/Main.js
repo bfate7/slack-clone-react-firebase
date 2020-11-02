@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Grid } from "semantic-ui-react";
 import ColorPanel from "./ColorPanel";
 import SidePanel from "./SidePanel/SidePanel";
-import Messages from "./Messages";
+import Messages from "./Messages/Messages";
 import MetaPanel from "./MetaPanel";
 
 const Main = (props) => (
