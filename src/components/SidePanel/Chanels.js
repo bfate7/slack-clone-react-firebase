@@ -9,10 +9,22 @@ const Chanels = (props) => {
   const chanelsRef = firebase.database().ref("chanels");
   //chanels state
   const [chanels, setChanels] = useState([]);
+  //first load
+  const [firstLoad, setFirstLoad] = useState(true);
+  //active chanel
+  const [activeChanel, setActiveChanel] = useState(null);
+
+  const setFisrtChanel = (loadedChanels) => {
+    if (firstLoad && loadedChanels.length > 0) {
+      props.setCurrentChanel(loadedChanels[0]);
+      setActiveChanel(loadedChanels[0]);
+    }
+
+    setFirstLoad(false);
+  };
 
   useEffect(() => {
-    console.log("effect ran");
-
+    console.log("effect start");
     chanelsRef.on("value", (snapshot) => {
       const loadedChanels = [];
       const res = snapshot.val();
@@ -20,7 +32,9 @@ const Chanels = (props) => {
         loadedChanels.push(res[id]);
       }
       setChanels(loadedChanels);
+      setFisrtChanel(loadedChanels);
     });
+    console.log("effect end");
     return () => chanelsRef.off();
   }, []);
 
@@ -71,12 +85,16 @@ const Chanels = (props) => {
         name={chanel.name}
         style={{ opavity: "0.8" }}
         onClick={() => changeChanel(chanel)}
+        active={activeChanel && chanel.id === activeChanel.id}
       >
         # {chanel.name}
       </Menu.Item>
     ));
 
-  const changeChanel = (chanel) => props.setCurrentChanel(chanel);
+  const changeChanel = (chanel) => {
+    setActiveChanel(chanel);
+    props.setCurrentChanel(chanel);
+  };
 
   return (
     <>
