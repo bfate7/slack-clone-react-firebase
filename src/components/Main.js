@@ -11,7 +11,10 @@ const Main = (props) => (
     <ColorPanel />
     <SidePanel currentUser={props.currentUser} />
     <Grid.Column style={{ marginLeft: "320px" }}>
-      <Messages />
+      <Messages
+        currentChanel={props.currentChanel}
+        currentUser={props.currentUser}
+      />
     </Grid.Column>
     <Grid.Column>
       <MetaPanel />
@@ -21,6 +24,7 @@ const Main = (props) => (
 
 const mapStateToProps = (state) => ({
   currentUser: state.user.currentUser,
+  currentChanel: state.chanel.currentChanel,
 });
 
 export default connect(mapStateToProps)(Main);
