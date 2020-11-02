@@ -21,8 +21,8 @@ function App(props) {
         props.setUser(user);
         return props.history.push("/");
       } else {
-        props.clearUser();
         props.history.push("/login");
+        props.clearUser();
       }
     });
   }, []);
