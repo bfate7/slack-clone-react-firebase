@@ -28,6 +28,7 @@ const Messages = (props) => {
         loadedMessages.push(res[id]);
       }
       setMessages(loadedMessages);
+      setLoading(false);
     });
   };
 
@@ -47,7 +48,7 @@ const Messages = (props) => {
 
       <Segment>
         <Comment.Group className="messages" style={{ marginBottom: "0.7em" }}>
-          {<MessagesList />}
+          {loading ? "loading messages..." : <MessagesList />}
         </Comment.Group>
       </Segment>
 
