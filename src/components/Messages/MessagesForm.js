@@ -3,21 +3,22 @@ import firebase from "../../firebase";
 import { Button, Input, Segment } from "semantic-ui-react";
 import FileModal from "./FileModal";
 import { v4 as uuidv4 } from "uuid";
+import ProgressBar from "./ProgressBar";
 
 const MessagesForm = (props) => {
   const messagesRef = firebase.database().ref("messages");
   const storageRef = firebase.storage().ref();
 
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [modal, setModal] = useState(false);
 
   //upload
-  const [uploadState, setUploadState] = useState(null);
+  const [uploadState, setUploadState] = useState(false);
   const [percentUpload, setPercentUpload] = useState(0);
 
   const createMessage = (fileURL = null) => {
-    const message = {
+    const messagetoSend = {
       timestamp: firebase.database.ServerValue.TIMESTAMP,
       user: {
         id: props.currentUser.uid,
@@ -27,12 +28,12 @@ const MessagesForm = (props) => {
     };
 
     if (fileURL) {
-      message["image"] = fileURL;
+      messagetoSend["image"] = fileURL;
     } else {
-      message["content"] = message;
+      messagetoSend["content"] = message;
     }
 
-    return message;
+    return messagetoSend;
   };
 
   const sendMessage = (e) => {
@@ -45,7 +46,6 @@ const MessagesForm = (props) => {
         .then((res) => {
           setLoading(false);
           setMessage("");
-          console.log(res);
         })
         .catch((err) => {
           console.log(err);
@@ -58,9 +58,7 @@ const MessagesForm = (props) => {
       .child(props.currentChanel.id)
       .push()
       .set(createMessage(fileURL))
-      .then(() => {
-        setUploadState("done");
-      })
+      .then(() => {})
       .catch((err) => {
         console.log(err);
       });
@@ -68,7 +66,7 @@ const MessagesForm = (props) => {
 
   const uploadFile = (file, metadata) => {
     //set uploading state
-    setUploadState("uploading");
+    setUploadState(true);
     //set filePath
     const filePath = `chat/public/${uuidv4()}`;
     //set uploadTask
@@ -80,8 +78,6 @@ const MessagesForm = (props) => {
         const percentUpload = Math.round(
           (snap.bytesTransferred / snap.totalBytes) * 100
         );
-        console.log(percentUpload);
-
         setPercentUpload(percentUpload);
       },
       (err) => {
@@ -90,7 +86,7 @@ const MessagesForm = (props) => {
     );
 
     uploadTask.then(() => {
-      setUploadState("done");
+      setUploadState(false);
       uploadTask.snapshot.ref.getDownloadURL().then((fileURL) => {
         sendFileMessage(fileURL);
       });
@@ -108,6 +104,7 @@ const MessagesForm = (props) => {
         label={<Button icon={"add"} />}
         labelPosition="left"
         placeholder="Write your message"
+        disabled={loading}
       />
       <Button.Group icon widths="2">
         <Button
@@ -127,6 +124,7 @@ const MessagesForm = (props) => {
           onClick={() => setModal(true)}
         />
       </Button.Group>
+      <ProgressBar percentUpload={percentUpload} uploadState={uploadState} />
       <FileModal
         modal={modal}
         closeModal={() => setModal(false)}
