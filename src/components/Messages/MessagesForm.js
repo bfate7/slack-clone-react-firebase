@@ -122,6 +122,7 @@ const MessagesForm = (props) => {
           labelPosition="right"
           icon="cloud upload"
           onClick={() => setModal(true)}
+          disabled={uploadState}
         />
       </Button.Group>
       <ProgressBar percentUpload={percentUpload} uploadState={uploadState} />
