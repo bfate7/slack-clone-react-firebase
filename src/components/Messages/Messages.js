@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Segment, Comment } from "semantic-ui-react";
+import { Segment, Comment, AccordionContent } from "semantic-ui-react";
 import MessagesHeader from "./MessagesHeader";
 import MessagesForm from "./MessagesForm";
 import Message from "./Message";
@@ -9,6 +9,7 @@ const Messages = (props) => {
   const messagesRef = firebase.database().ref("messages");
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [numUsers, setNumUsers] = useState(0);
 
   useEffect(() => {
     addListners();
@@ -20,6 +21,17 @@ const Messages = (props) => {
     }
   };
 
+  const countUniqueUsers = (messages) => {
+    const uniqueUsers = messages.reduce((acc, message) => {
+      if (!acc.includes(message.user.name)) {
+        acc.push(message.user.name);
+      }
+      return acc;
+    }, []);
+
+    setNumUsers(uniqueUsers.length);
+  };
+
   const addMessagelistner = (chanelId) => {
     messagesRef.child(chanelId).on("value", (snapshot) => {
       const loadedMessages = [];
@@ -29,6 +41,7 @@ const Messages = (props) => {
       }
       setMessages(loadedMessages);
       setLoading(false);
+      countUniqueUsers(loadedMessages);
     });
   };
 
@@ -44,7 +57,10 @@ const Messages = (props) => {
 
   return (
     <>
-      <MessagesHeader />
+      <MessagesHeader
+        currentChanel={props.currentChanel}
+        countUniqueUsers={numUsers}
+      />
 
       <Segment>
         <Comment.Group className="messages" style={{ marginBottom: "0.7em" }}>
