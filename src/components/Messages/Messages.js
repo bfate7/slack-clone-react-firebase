@@ -34,11 +34,15 @@ const Messages = (props) => {
 
   const addMessagelistner = (chanelId) => {
     messagesRef.child(chanelId).on("value", (snapshot) => {
-      const loadedMessages = [];
       const res = snapshot.val();
-      for (const id in res) {
-        loadedMessages.push(res[id]);
+      const loadedMessages = [];
+
+      if (snapshot.key === props.currentChanel.id) {
+        for (const key in res) {
+          loadedMessages.push(res[key]);
+        }
       }
+
       setMessages(loadedMessages);
       setLoading(false);
       countUniqueUsers(loadedMessages);
