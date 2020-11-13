@@ -9,7 +9,7 @@ const MessagesForm = (props) => {
   const messagesRef = firebase.database().ref("messages");
   const storageRef = firebase.storage().ref();
 
-  const [message, setMessage] = useState(null);
+  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [modal, setModal] = useState(false);
 
@@ -96,7 +96,7 @@ const MessagesForm = (props) => {
   return (
     <Segment className="message__form">
       <Input
-        fluid
+        fluid={true}
         name="message"
         onChange={(e) => setMessage(e.target.value)}
         value={message}
