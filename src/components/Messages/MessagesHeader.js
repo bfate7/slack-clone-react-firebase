@@ -3,7 +3,7 @@ import { Header, Icon, Input, Segment } from "semantic-ui-react";
 
 const MessagesHeader = (props) => (
   <Segment clearing>
-    <Header fluid as="h2" floated="left">
+    <Header as="h3" floated="left">
       {props.currentChanel && "#" + props.currentChanel.name}
       <span>
         <Icon name="star outline" color="black" />
