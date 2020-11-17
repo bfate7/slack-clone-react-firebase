@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import { Segment, Comment } from "semantic-ui-react";
 import MessagesHeader from "./MessagesHeader";
 import MessagesForm from "./MessagesForm";
@@ -34,20 +33,13 @@ const Messages = (props) => {
   };
 
   const addMessagelistner = (chanelId) => {
-    messagesRef.child(chanelId).on("value", (snapshot) => {
-      const res = snapshot.val();
-      const loadedMessages = [];
-
-      if (snapshot.key === props.currentChanel.id) {
-        for (const key in res) {
-          loadedMessages.push(res[key]);
-        }
-      }
-
-      setMessages(loadedMessages);
-      setLoading(false);
-      countUniqueUsers(loadedMessages);
+    const loadedMessages = [];
+    messagesRef.child(chanelId).on("child_added", (snapshot) => {
+      loadedMessages.push(snapshot.val());
+      setMessages([...loadedMessages]);
     });
+    setLoading(false);
+    countUniqueUsers(loadedMessages);
   };
 
   const MessagesList = () =>
