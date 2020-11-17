@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Segment, Comment, AccordionContent } from "semantic-ui-react";
+import PropTypes from "prop-types";
+import { Segment, Comment } from "semantic-ui-react";
 import MessagesHeader from "./MessagesHeader";
 import MessagesForm from "./MessagesForm";
 import Message from "./Message";
