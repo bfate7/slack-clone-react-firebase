@@ -12,15 +12,17 @@ const MessagesHeader = (props) => (
         {props.countUniqueUsers}{" "}
         {props.countUniqueUsers === 0 || props.countUniqueUsers === 1
           ? "User"
-          : "User"}
+          : "Users"}
       </Header.Subheader>
     </Header>
     <Header floated="right">
       <Input
+        loading={props.searchLoading}
         size="mini"
         icon="search"
         name="searchTerm"
         placeholder="Search Messages"
+        onChange={(e) => props.handleSearch(e)}
       />
     </Header>
   </Segment>
