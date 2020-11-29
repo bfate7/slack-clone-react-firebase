@@ -8,7 +8,9 @@ const UserPanel = (props) => {
     firebase
       .auth()
       .signOut()
-      .then(() => {});
+      .then(() => {
+        firebase.database().goOffline();
+      });
   };
 
   const dropdownoptions = [

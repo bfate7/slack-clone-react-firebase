@@ -25,9 +25,7 @@ const DirectMessages = (props) => {
       if (snap.val()) {
         const ref = presenceRef.child(currentUserID);
         ref.set(true);
-        ref.onDisconnect().remove((err) => {
-          if (err) console.log(err);
-        });
+        ref.onDisconnect().remove();
       }
     });
   }, []);
