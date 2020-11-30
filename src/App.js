@@ -14,20 +14,20 @@ import { connect, Provider } from "react-redux";
 import { setUser, clearUser } from "./actions/userActions";
 import Spinner from "./components/Spinner";
 
-function App(props) {
+function App({ setUser, clearUser, history, isLoading }) {
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        props.setUser(user);
-        return props.history.push("/");
+        setUser(user);
+        return history.push("/");
       } else {
-        props.history.push("/login");
-        props.clearUser();
+        history.push("/login");
+        clearUser();
       }
     });
-  }, [props]);
+  }, [clearUser, history, setUser]);
 
-  return props.isLoading ? (
+  return isLoading ? (
     <Spinner />
   ) : (
     <Switch>
