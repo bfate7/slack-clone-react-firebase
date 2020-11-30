@@ -5,9 +5,10 @@ import MessagesForm from "./MessagesForm";
 import Message from "./Message";
 import firebase from "../../firebase";
 
+// db messages ref
+const messagesRef = firebase.database().ref("messages");
+
 const Messages = (props) => {
-  // db messages ref
-  const [messagesRef] = useState(firebase.database().ref("messages"));
   //messages state
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -30,7 +31,7 @@ const Messages = (props) => {
       setLoading(false);
       countUniqueUsers(loadedMessages);
     }
-  }, [messagesRef, props.currentChanel]);
+  }, [props.currentChanel]);
 
   const addListners = useCallback(() => {
     if (props.currentChanel) {
@@ -40,6 +41,9 @@ const Messages = (props) => {
 
   useEffect(() => {
     addListners(props.currentChanel);
+    return () => {
+      messagesRef.off();
+    };
   }, [props.currentChanel, addListners]);
 
   const runSearch = useCallback(() => {
@@ -60,7 +64,6 @@ const Messages = (props) => {
   }, [messages, searchTerm]);
 
   useEffect(() => {
-    console.log("search effect");
     runSearch();
   }, [runSearch]);
 
