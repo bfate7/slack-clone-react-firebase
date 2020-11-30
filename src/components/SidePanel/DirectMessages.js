@@ -21,7 +21,6 @@ const DirectMessages = (props) => {
   //create a presence record for current user
   const addPressenceListner = useCallback((currentUserID) => {
     connectedRef.on("value", (snap) => {
-      console.log("connecting snap value", snap.val());
       if (snap.val()) {
         const ref = presenceRef.child(currentUserID);
         ref.set(true);
@@ -51,7 +50,6 @@ const DirectMessages = (props) => {
         if (user.uid === snap.key) {
           user["status"] = "online";
         }
-        console.log("user", user);
         return user;
       });
       setUsers(...[updatedUsers]);
@@ -63,7 +61,6 @@ const DirectMessages = (props) => {
     presenceRef.on("child_removed", (snap) => {
       const updatedUsers = getUsersRef.current.map((user) => {
         if (user.uid === snap.key) {
-          console.log("user disconnected", user);
           user["status"] = "offline";
         }
         return user;
