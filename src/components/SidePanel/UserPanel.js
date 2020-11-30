@@ -2,6 +2,8 @@ import React from "react";
 import { Dropdown, Grid, Header, Icon, Image } from "semantic-ui-react";
 import firebase from "../../firebase";
 
+const presenceRef = firebase.database().ref("presence");
+
 const UserPanel = (props) => {
   const user = props.currentUser;
   const handleSignOut = () => {
@@ -9,7 +11,7 @@ const UserPanel = (props) => {
       .auth()
       .signOut()
       .then(() => {
-        firebase.database().goOffline();
+        presenceRef.child(user.uid).remove();
       });
   };
 
