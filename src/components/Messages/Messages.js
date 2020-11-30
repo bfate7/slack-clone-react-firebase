@@ -7,6 +7,7 @@ import firebase from "../../firebase";
 
 // db messages ref
 const messagesRef = firebase.database().ref("messages");
+const privateMessagesRef = firebase.database().ref("privateMessages");
 
 const Messages = (props) => {
   //messages state
@@ -18,11 +19,15 @@ const Messages = (props) => {
   const [searchLoading, setSearchLoading] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
 
+  const getMessagesRef = useCallback(() => {
+    return props.isPrivateChannel ? privateMessagesRef : messagesRef;
+  }, [props.isPrivateChannel]);
+
   const addMessagelistner = useCallback(() => {
     if (props.currentChanel) {
       setMessages([]);
       const loadedMessages = [];
-      messagesRef
+      getMessagesRef()
         .child(props.currentChanel.id)
         .on("child_added", (snapshot) => {
           loadedMessages.push(snapshot.val());
@@ -31,7 +36,7 @@ const Messages = (props) => {
       setLoading(false);
       countUniqueUsers(loadedMessages);
     }
-  }, [props.currentChanel]);
+  }, [getMessagesRef, props.currentChanel]);
 
   const addListners = useCallback(() => {
     if (props.currentChanel) {
@@ -124,6 +129,8 @@ const Messages = (props) => {
       <MessagesForm
         currentChanel={props.currentChanel}
         currentUser={props.currentUser}
+        isPrivateChannel={props.isPrivateChannel}
+        getMessagesRef={getMessagesRef}
       />
     </>
   );

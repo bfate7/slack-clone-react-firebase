@@ -5,7 +5,6 @@ import FileModal from "./FileModal";
 import { v4 as uuidv4 } from "uuid";
 import ProgressBar from "./ProgressBar";
 
-const messagesRef = firebase.database().ref("messages");
 const storageRef = firebase.storage().ref();
 
 const MessagesForm = (props) => {
@@ -39,11 +38,12 @@ const MessagesForm = (props) => {
   const sendMessage = (e) => {
     if (message) {
       setLoading(true);
-      messagesRef
+      props
+        .getMessagesRef()
         .child(props.currentChanel.id)
         .push()
         .set(createMessage())
-        .then((res) => {
+        .then(() => {
           setLoading(false);
           setMessage("");
         })
@@ -54,7 +54,8 @@ const MessagesForm = (props) => {
   };
 
   const sendFileMessage = (fileURL) => {
-    messagesRef
+    props
+      .getMessagesRef()
       .child(props.currentChanel.id)
       .push()
       .set(createMessage(fileURL))
@@ -64,11 +65,19 @@ const MessagesForm = (props) => {
       });
   };
 
+  const getUploadPath = () => {
+    if (props.isPrivateChannel) {
+      return `chat/private-${props.currentChanel.id}`;
+    } else {
+      return `chat/public-${props.currentChanel.id}`;
+    }
+  };
+
   const uploadFile = (file, metadata) => {
     //set uploading state
     setUploadState(true);
     //set filePath
-    const filePath = `chat/public/${uuidv4()}`;
+    const filePath = `${getUploadPath()}/${uuidv4()}`;
     //set uploadTask
     const uploadTask = storageRef.child(filePath).put(file, metadata);
 
