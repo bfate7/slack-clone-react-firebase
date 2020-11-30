@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Button, Form, Icon, Menu, Modal } from "semantic-ui-react";
 import firebase from "../../firebase";
 import { setCurrentChanel } from "../../actions/chanelActions";
 
+//chanels firebase ref
+const chanelsRef = firebase.database().ref("chanels");
+
 const Chanels = (props) => {
-  //chanels firebase ref
-  const chanelsRef = firebase.database().ref("chanels");
   //chanels state
   const [chanels, setChanels] = useState([]);
   //first load
@@ -14,17 +15,19 @@ const Chanels = (props) => {
   //active chanel
   const [activeChanel, setActiveChanel] = useState(null);
 
-  const setFisrtChanel = (loadedChanels) => {
-    if (firstLoad && loadedChanels.length > 0) {
-      props.setCurrentChanel(loadedChanels[0]);
-      setActiveChanel(loadedChanels[0]);
-    }
+  const setFisrtChanel = useCallback(
+    (loadedChanels) => {
+      if (firstLoad && loadedChanels.length > 0) {
+        props.setCurrentChanel(loadedChanels[0]);
+        setActiveChanel(loadedChanels[0]);
+      }
 
-    setFirstLoad(false);
-  };
+      setFirstLoad(false);
+    },
+    [firstLoad, props]
+  );
 
   useEffect(() => {
-    console.log("effect start");
     chanelsRef.on("value", (snapshot) => {
       const loadedChanels = [];
       const res = snapshot.val();
@@ -34,9 +37,9 @@ const Chanels = (props) => {
       setChanels(loadedChanels);
       setFisrtChanel(loadedChanels);
     });
-    console.log("effect end");
+
     return () => chanelsRef.off();
-  }, []);
+  }, [setFisrtChanel]);
 
   //modal state
   const [modal, setModal] = useState(false);
@@ -64,8 +67,6 @@ const Chanels = (props) => {
         avatar: props.currentUser.photoURL,
       },
     };
-
-    console.log(newChanel);
 
     chanelsRef
       .child(key)
