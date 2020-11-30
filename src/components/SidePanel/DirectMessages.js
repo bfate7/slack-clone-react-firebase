@@ -13,6 +13,7 @@ const presenceRef = firebase.database().ref("presence");
 
 const DirectMessages = (props) => {
   const [users, _setUsers] = useState([]);
+  const [activeChannel, setActiveChannel] = useState(null);
 
   //get users ref
   const getUsersRef = useRef(users);
@@ -118,6 +119,7 @@ const DirectMessages = (props) => {
 
     props.setCurrentChanel(channelData);
     props.setPrivateChannel(true);
+    setActiveChannel(user.uid);
   };
 
   return (
@@ -130,7 +132,11 @@ const DirectMessages = (props) => {
       </Menu.Item>
 
       {users.map((user) => (
-        <Menu.Item key={user.uid} onClick={() => changeChannel(user)}>
+        <Menu.Item
+          key={user.uid}
+          onClick={() => changeChannel(user)}
+          active={user.uid === activeChannel}
+        >
           <Icon name="circle" color={isUserOnline(user) ? "green" : "red"} />@
           {user.username}
         </Menu.Item>
