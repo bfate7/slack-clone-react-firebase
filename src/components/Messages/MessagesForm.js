@@ -5,10 +5,10 @@ import FileModal from "./FileModal";
 import { v4 as uuidv4 } from "uuid";
 import ProgressBar from "./ProgressBar";
 
-const MessagesForm = (props) => {
-  const messagesRef = firebase.database().ref("messages");
-  const storageRef = firebase.storage().ref();
+const messagesRef = firebase.database().ref("messages");
+const storageRef = firebase.storage().ref();
 
+const MessagesForm = (props) => {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [modal, setModal] = useState(false);
@@ -81,7 +81,7 @@ const MessagesForm = (props) => {
         setPercentUpload(percentUpload);
       },
       (err) => {
-        alert("err uploading");
+        console.log(err);
       }
     );
 
