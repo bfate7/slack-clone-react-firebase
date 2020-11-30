@@ -8,6 +8,7 @@ import { setCurrentChanel } from "../../actions/chanelActions";
 const chanelsRef = firebase.database().ref("chanels");
 
 const Chanels = (props) => {
+  const { setCurrentChanel } = props;
   //chanels state
   const [chanels, setChanels] = useState([]);
   //first load
@@ -18,22 +19,24 @@ const Chanels = (props) => {
   const setFisrtChanel = useCallback(
     (loadedChanels) => {
       if (firstLoad && loadedChanels.length > 0) {
-        props.setCurrentChanel(loadedChanels[0]);
+        setCurrentChanel(loadedChanels[0]);
         setActiveChanel(loadedChanels[0]);
       }
 
       setFirstLoad(false);
     },
-    [firstLoad, props]
+    [firstLoad, setCurrentChanel]
   );
 
   useEffect(() => {
+    console.log("channels eff");
     chanelsRef.on("value", (snapshot) => {
       const loadedChanels = [];
       const res = snapshot.val();
       for (const id in res) {
         loadedChanels.push(res[id]);
       }
+      console.log("lc:", loadedChanels);
       setChanels(loadedChanels);
       setFisrtChanel(loadedChanels);
     });
