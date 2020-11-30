@@ -1,6 +1,11 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
+import { connect } from "react-redux";
 import { Icon, Menu } from "semantic-ui-react";
 import firebase from "../../firebase";
+import {
+  setCurrentChanel,
+  setPrivateChannel,
+} from "../../actions/chanelActions";
 
 const usersRef = firebase.database().ref("users");
 const connectedRef = firebase.database().ref(".info/connected");
@@ -97,6 +102,24 @@ const DirectMessages = (props) => {
 
   const isUserOnline = (user) => user.status === "online";
 
+  const getChannelId = (userId) => {
+    const currentUserID = props.currentUser.uid;
+    return userId < currentUserID
+      ? `${currentUserID}/${userId}`
+      : `${userId}/${currentUserID}`;
+  };
+
+  const changeChannel = (user) => {
+    const channelId = getChannelId(user.uid);
+    const channelData = {
+      id: channelId,
+      name: user.username,
+    };
+
+    props.setCurrentChanel(channelData);
+    props.setPrivateChannel(true);
+  };
+
   return (
     <Menu.Menu className="menu" style={{ paddingTop: "2em" }}>
       <Menu.Item>
@@ -107,7 +130,7 @@ const DirectMessages = (props) => {
       </Menu.Item>
 
       {users.map((user) => (
-        <Menu.Item key={user.uid}>
+        <Menu.Item key={user.uid} onClick={() => changeChannel(user)}>
           <Icon name="circle" color={isUserOnline(user) ? "green" : "red"} />@
           {user.username}
         </Menu.Item>
@@ -116,4 +139,6 @@ const DirectMessages = (props) => {
   );
 };
 
-export default DirectMessages;
+export default connect(null, { setCurrentChanel, setPrivateChannel })(
+  DirectMessages
+);

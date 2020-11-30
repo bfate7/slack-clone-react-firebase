@@ -2,7 +2,10 @@ import React, { useCallback, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Button, Form, Icon, Menu, Modal } from "semantic-ui-react";
 import firebase from "../../firebase";
-import { setCurrentChanel } from "../../actions/chanelActions";
+import {
+  setCurrentChanel,
+  setPrivateChannel,
+} from "../../actions/chanelActions";
 
 //chanels firebase ref
 const chanelsRef = firebase.database().ref("chanels");
@@ -98,6 +101,7 @@ const Chanels = (props) => {
   const changeChanel = (chanel) => {
     setActiveChanel(chanel);
     props.setCurrentChanel(chanel);
+    props.setPrivateChannel(false);
   };
 
   return (
@@ -152,4 +156,4 @@ const Chanels = (props) => {
   );
 };
 
-export default connect(null, { setCurrentChanel })(Chanels);
+export default connect(null, { setCurrentChanel, setPrivateChannel })(Chanels);

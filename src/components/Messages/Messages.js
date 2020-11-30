@@ -112,6 +112,7 @@ const Messages = (props) => {
         countUniqueUsers={numUsers}
         handleSearch={handleSearch}
         searchLoading={searchLoading}
+        isPrivateChannel={props.isPrivateChannel}
       />
 
       <Segment>
