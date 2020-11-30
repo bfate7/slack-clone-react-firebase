@@ -25,7 +25,7 @@ function App(props) {
         props.clearUser();
       }
     });
-  }, []);
+  }, [props]);
 
   return props.isLoading ? (
     <Spinner />
