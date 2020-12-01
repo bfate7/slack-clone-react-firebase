@@ -32,18 +32,12 @@ const Chanels = (props) => {
   );
 
   useEffect(() => {
-    console.log("channels eff");
-    chanelsRef.on("value", (snapshot) => {
-      const loadedChanels = [];
-      const res = snapshot.val();
-      for (const id in res) {
-        loadedChanels.push(res[id]);
-      }
-      console.log("lc:", loadedChanels);
-      setChanels(loadedChanels);
-      setFisrtChanel(loadedChanels);
+    let loadedChanels = [];
+    chanelsRef.on("child_added", (snapshot) => {
+      loadedChanels.push(snapshot.val());
+      setChanels([...loadedChanels]);
+      setFisrtChanel([...loadedChanels]);
     });
-
     return () => chanelsRef.off();
   }, [setFisrtChanel]);
 
