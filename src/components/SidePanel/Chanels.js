@@ -9,6 +9,7 @@ import {
 
 //chanels firebase ref
 const chanelsRef = firebase.database().ref("chanels");
+const messagesRef = firebase.database().ref("messages");
 
 const Chanels = (props) => {
   const { setCurrentChanel } = props;
@@ -93,6 +94,11 @@ const Chanels = (props) => {
     ));
 
   const changeChanel = (chanel) => {
+    //remove messages listner before changing channel
+    //this is due to bug of reciving messages from another channel
+
+    messagesRef.child(props.currentChanel.id).off();
+
     props.setCurrentChanel(chanel);
     props.setPrivateChannel(false);
 
