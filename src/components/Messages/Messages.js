@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useCallback } from "react";
+import { connect } from "react-redux";
 import { Segment, Comment } from "semantic-ui-react";
 import MessagesHeader from "./MessagesHeader";
 import MessagesForm from "./MessagesForm";
 import Message from "./Message";
 import firebase from "../../firebase";
+import { setUsersPosts } from "../../actions/userActions";
 
 // db messages ref
 const usersRef = firebase.database().ref("users");
@@ -11,6 +13,8 @@ const messagesRef = firebase.database().ref("messages");
 const privateMessagesRef = firebase.database().ref("privateMessages");
 
 const Messages = (props) => {
+  const { setUsersPosts } = props;
+
   //messages state
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -78,6 +82,30 @@ const Messages = (props) => {
     }
   }, [props.currentChanel, props.currentUser, starChannel, setStarredLoaded]);
 
+  const countUsesPosts = useCallback(
+    (messages) => {
+      const usersPosts = messages.reduce((acc, message) => {
+        if (message.user.name in acc) {
+          acc[message.user.name].count += 1;
+        } else {
+          acc[message.user.name] = {
+            avatar: message.user.avatar,
+            count: 1,
+          };
+        }
+
+        return acc;
+      }, {});
+      setUsersPosts(usersPosts);
+    },
+    [setUsersPosts]
+  );
+
+  useEffect(() => {
+    countUniqueUsers(messages);
+    countUsesPosts(messages);
+  }, [countUsesPosts, messages]);
+
   const addMessagelistner = useCallback(() => {
     if (props.currentChanel) {
       setMessages([]);
@@ -89,7 +117,6 @@ const Messages = (props) => {
           setMessages([...loadedMessages]);
         });
       setLoading(false);
-      countUniqueUsers(loadedMessages);
     }
   }, [getMessagesRef, props.currentChanel]);
 
@@ -193,4 +220,4 @@ const Messages = (props) => {
   );
 };
 
-export default Messages;
+export default connect(null, { setUsersPosts })(Messages);

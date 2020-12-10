@@ -21,13 +21,19 @@ const Main = (props) => (
       />
     </Grid.Column>
     <Grid.Column>
-      <MetaPanel />
+      <MetaPanel
+        currentChanel={props.currentChanel}
+        isPrivateChannel={props.isPrivateChannel}
+        key={props.currentChanel && props.currentChanel.id}
+        usersPosts={props.usersPosts}
+      />
     </Grid.Column>
   </Grid>
 );
 
 const mapStateToProps = (state) => ({
   currentUser: state.user.currentUser,
+  usersPosts: state.user.usersPosts,
   currentChanel: state.chanel.currentChanel,
   isPrivateChannel: state.chanel.isPrivate,
 });
