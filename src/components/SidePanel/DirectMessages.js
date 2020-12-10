@@ -116,7 +116,6 @@ const DirectMessages = (props) => {
       id: channelId,
       name: user.username,
     };
-
     props.setCurrentChanel(channelData);
     props.setPrivateChannel(true);
     setActiveChannel(user.uid);

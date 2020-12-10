@@ -9,7 +9,10 @@ import MetaPanel from "./MetaPanel";
 const Main = (props) => (
   <Grid columns="equal" className="app" style={{ background: "#eee" }}>
     <ColorPanel />
-    <SidePanel currentUser={props.currentUser} />
+    <SidePanel
+      currentUser={props.currentUser}
+      currentChanel={props.currentChanel}
+    />
     <Grid.Column style={{ marginLeft: "320px" }}>
       <Messages
         currentChanel={props.currentChanel}

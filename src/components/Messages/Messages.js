@@ -6,6 +6,7 @@ import Message from "./Message";
 import firebase from "../../firebase";
 
 // db messages ref
+const usersRef = firebase.database().ref("users");
 const messagesRef = firebase.database().ref("messages");
 const privateMessagesRef = firebase.database().ref("privateMessages");
 
@@ -18,10 +19,64 @@ const Messages = (props) => {
   const [searchTerm, setSearchTerm] = useState(null);
   const [searchLoading, setSearchLoading] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
+  //isChannelStarred
+  const [isChannelStarred, setIsChannelStarred] = useState(false);
+  const [starredLoaded, setStarredLoaded] = useState(false);
 
   const getMessagesRef = useCallback(() => {
     return props.isPrivateChannel ? privateMessagesRef : messagesRef;
   }, [props.isPrivateChannel]);
+
+  const handleStar = () => {
+    if (starredLoaded) {
+      starChannel(!isChannelStarred, props.currentChanel, props.currentUser);
+    }
+  };
+
+  const starChannel = useCallback((isStarred, currentChanel, currentUser) => {
+    if (isStarred) {
+      setIsChannelStarred(true);
+      usersRef
+        .child(currentUser.uid)
+        .child("starred")
+        .update({
+          [currentChanel.id]: { ...currentChanel },
+        })
+        .catch((err) => {
+          setIsChannelStarred(false);
+        });
+    } else {
+      setIsChannelStarred(false);
+      usersRef
+        .child(currentUser.uid)
+        .child("starred")
+        .child(currentChanel.id)
+        .remove()
+        .catch((err) => {
+          setIsChannelStarred(true);
+        });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (props.currentUser && props.currentChanel) {
+      usersRef
+        .child(props.currentUser.uid)
+        .child("starred")
+        .once("value")
+        .then((snap) => {
+          if (snap.val()) {
+            const ids = Object.keys(snap.val());
+            const isStarred = ids.includes(props.currentChanel.id);
+            setIsChannelStarred(isStarred);
+          } else {
+            setIsChannelStarred(false);
+          }
+
+          setStarredLoaded(true);
+        });
+    }
+  }, [props.currentChanel, props.currentUser, starChannel, setStarredLoaded]);
 
   const addMessagelistner = useCallback(() => {
     if (props.currentChanel) {
@@ -118,6 +173,8 @@ const Messages = (props) => {
         handleSearch={handleSearch}
         searchLoading={searchLoading}
         isPrivateChannel={props.isPrivateChannel}
+        isChannelStarred={isChannelStarred}
+        handleStar={handleStar}
       />
 
       <Segment>

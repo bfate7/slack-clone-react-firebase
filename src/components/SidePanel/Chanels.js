@@ -93,10 +93,17 @@ const Chanels = (props) => {
     ));
 
   const changeChanel = (chanel) => {
-    setActiveChanel(chanel);
     props.setCurrentChanel(chanel);
     props.setPrivateChannel(false);
+
+    setActiveChanel(chanel);
   };
+
+  useEffect(() => {
+    if (props.currentChanel) {
+      setActiveChanel(props.currentChanel);
+    }
+  }, [props.currentChanel]);
 
   return (
     <>
