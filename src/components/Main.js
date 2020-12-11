@@ -7,11 +7,16 @@ import Messages from "./Messages/Messages";
 import MetaPanel from "./MetaPanel";
 
 const Main = (props) => (
-  <Grid columns="equal" className="app" style={{ background: "#eee" }}>
-    <ColorPanel />
+  <Grid
+    columns="equal"
+    className="app"
+    style={{ background: props.userColors.secondaryColor }}
+  >
+    <ColorPanel currentUser={props.currentUser} />
     <SidePanel
       currentUser={props.currentUser}
       currentChanel={props.currentChanel}
+      userColors={props.userColors}
     />
     <Grid.Column style={{ marginLeft: "320px" }}>
       <Messages
@@ -34,6 +39,7 @@ const Main = (props) => (
 const mapStateToProps = (state) => ({
   currentUser: state.user.currentUser,
   usersPosts: state.user.usersPosts,
+  userColors: state.user.userColors,
   currentChanel: state.chanel.currentChanel,
   isPrivateChannel: state.chanel.isPrivate,
 });

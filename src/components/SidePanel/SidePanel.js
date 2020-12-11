@@ -6,7 +6,13 @@ import DirectMessages from "./DirectMessages";
 import Starred from "./Starred";
 
 const SidePanel = (props) => (
-  <Menu size="large" inverted fixed="left" vertical>
+  <Menu
+    size="large"
+    inverted
+    fixed="left"
+    vertical
+    style={{ background: props.userColors.primaryColor || "#1e272e" }}
+  >
     <UserPanel currentUser={props.currentUser} />
     <Starred
       currentUser={props.currentUser}

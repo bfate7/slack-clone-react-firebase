@@ -4,6 +4,10 @@ const initiaState = {
   currentUser: null,
   isLoading: true,
   usersPosts: null,
+  userColors: {
+    primaryColor: "",
+    secondaryColor: "",
+  },
 };
 
 const userReducer = (state = initiaState, action) => {
@@ -27,6 +31,12 @@ const userReducer = (state = initiaState, action) => {
       return {
         ...state,
         usersPosts: payload,
+      };
+
+    case actionTypes.SET_COLORS:
+      return {
+        ...state,
+        userColors: payload,
       };
 
     default:
