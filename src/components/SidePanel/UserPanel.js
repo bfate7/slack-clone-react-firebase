@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Button,
   Dropdown,
@@ -11,16 +11,54 @@ import {
 } from "semantic-ui-react";
 import firebase from "../../firebase";
 
+import AvatarEditor from "react-avatar-editor";
+
 const presenceRef = firebase.database().ref("presence");
+
+const storageRef = firebase.storage().ref();
 
 const UserPanel = (props) => {
   const user = props.currentUser;
 
+  //Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [imagePreview, setImagePreview] = useState(null);
+  const [croppedImage, setCroppedImage] = useState(null);
+  const [imageBlob, setImageBlob] = useState(null);
+  //Modal Open/Close Handlers
   const openModal = () => setIsModalOpen(true);
-
   const closeModal = () => setIsModalOpen(false);
+
+  //image Input handler
+  const handleChange = (e) => {
+    const imageFile = e.target.files[0];
+
+    if (imageFile) {
+      const reader = new FileReader();
+      reader.readAsDataURL(imageFile);
+
+      reader.addEventListener("load", () => {
+        setImagePreview(reader.result);
+        console.log(reader.result);
+      });
+    }
+  };
+
+  //Crop handler
+  const AvatarEditorRef = useRef(null);
+  const handleCrop = () => {
+    if (AvatarEditorRef) {
+      AvatarEditorRef.current.getImageScaledToCanvas().toBlob((blob) => {
+        const imageURL = URL.createObjectURL(blob);
+        setCroppedImage(imageURL);
+        setImageBlob(blob);
+      });
+    }
+  };
+
+  //upload Cropped Image
+
+  const uploadCroppedImage = () => {};
 
   const handleSignOut = () => {
     firebase
@@ -56,20 +94,41 @@ const UserPanel = (props) => {
       <Modal.Header>Change Avatar</Modal.Header>
 
       <Modal.Content>
-        <Input fluid type="file" label="New Avatar" />
+        <Input fluid type="file" label="New Avatar" onChange={handleChange} />
 
-        <Grid centered stackable columns={2}>
-          <Grid.Row>
-            <Grid.Column></Grid.Column>
-            <Grid.Column></Grid.Column>
+        <Grid centered stackable columns={2} className=" m4 top">
+          <Grid.Row verticalAlign="middle" centered>
+            <Grid.Column>
+              {imagePreview && (
+                <>
+                  <AvatarEditor
+                    ref={AvatarEditorRef}
+                    image={imagePreview}
+                    width={200}
+                    height={200}
+                    border={50}
+                    scale={1.2}
+                  />
+                </>
+              )}
+            </Grid.Column>
+            <Grid.Column>
+              {croppedImage && (
+                <Image src={croppedImage} style={{ width: "200px" }} />
+              )}
+            </Grid.Column>
           </Grid.Row>
         </Grid>
       </Modal.Content>
       <Modal.Actions>
-        <Button color="green">
+        <Button
+          color="green"
+          disabled={!croppedImage}
+          onClick="uploadCroppedImage"
+        >
           <Icon name="save" /> Save Avatar
         </Button>
-        <Button color="blue">
+        <Button color="blue" onClick={handleCrop}>
           <Icon name="image" /> Preview
         </Button>
         <Button color="red" onClick={closeModal}>
