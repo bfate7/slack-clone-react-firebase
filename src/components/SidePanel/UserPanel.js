@@ -1,11 +1,27 @@
-import React from "react";
-import { Dropdown, Grid, Header, Icon, Image } from "semantic-ui-react";
+import React, { useState } from "react";
+import {
+  Button,
+  Dropdown,
+  Grid,
+  Header,
+  Icon,
+  Image,
+  Input,
+  Modal,
+} from "semantic-ui-react";
 import firebase from "../../firebase";
 
 const presenceRef = firebase.database().ref("presence");
 
 const UserPanel = (props) => {
   const user = props.currentUser;
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+
+  const closeModal = () => setIsModalOpen(false);
+
   const handleSignOut = () => {
     firebase
       .auth()
@@ -27,13 +43,41 @@ const UserPanel = (props) => {
     },
     {
       key: "avatar",
-      text: <span>Change Avatar</span>,
+      text: <span onClick={openModal}>Change Avatar</span>,
     },
     {
       key: "signout",
       text: <span onClick={handleSignOut}>Sign Out</span>,
     },
   ];
+
+  const ChangeAvatarModal = () => (
+    <Modal open={isModalOpen} onClose={closeModal}>
+      <Modal.Header>Change Avatar</Modal.Header>
+
+      <Modal.Content>
+        <Input fluid type="file" label="New Avatar" />
+
+        <Grid centered stackable columns={2}>
+          <Grid.Row>
+            <Grid.Column></Grid.Column>
+            <Grid.Column></Grid.Column>
+          </Grid.Row>
+        </Grid>
+      </Modal.Content>
+      <Modal.Actions>
+        <Button color="green">
+          <Icon name="save" /> Save Avatar
+        </Button>
+        <Button color="blue">
+          <Icon name="image" /> Preview
+        </Button>
+        <Button color="red" onClick={closeModal}>
+          <Icon name="remove" /> Cancel
+        </Button>
+      </Modal.Actions>
+    </Modal>
+  );
 
   return (
     <Grid>
@@ -58,6 +102,9 @@ const UserPanel = (props) => {
           />
         </Header>
       </Grid.Column>
+
+      {/* Chane Avatar Modal */}
+      <ChangeAvatarModal />
     </Grid>
   );
 };
