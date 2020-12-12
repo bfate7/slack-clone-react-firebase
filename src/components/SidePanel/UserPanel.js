@@ -17,6 +17,8 @@ const presenceRef = firebase.database().ref("presence");
 
 const storageRef = firebase.storage().ref();
 
+const usersRef = firebase.database().ref("users");
+
 const UserPanel = (props) => {
   const user = props.currentUser;
 
@@ -25,6 +27,8 @@ const UserPanel = (props) => {
   const [imagePreview, setImagePreview] = useState(null);
   const [croppedImage, setCroppedImage] = useState(null);
   const [imageBlob, setImageBlob] = useState(null);
+  const [loading, setLoading] = useState(false);
+
   //Modal Open/Close Handlers
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -37,9 +41,8 @@ const UserPanel = (props) => {
       const reader = new FileReader();
       reader.readAsDataURL(imageFile);
 
-      reader.addEventListener("load", () => {
+      reader.addEventListener("loadend", () => {
         setImagePreview(reader.result);
-        console.log(reader.result);
       });
     }
   };
@@ -47,7 +50,7 @@ const UserPanel = (props) => {
   //Crop handler
   const AvatarEditorRef = useRef(null);
   const handleCrop = () => {
-    if (AvatarEditorRef) {
+    if (AvatarEditorRef.current) {
       AvatarEditorRef.current.getImageScaledToCanvas().toBlob((blob) => {
         const imageURL = URL.createObjectURL(blob);
         setCroppedImage(imageURL);
@@ -57,8 +60,42 @@ const UserPanel = (props) => {
   };
 
   //upload Cropped Image
+  const uploadCroppedImage = () => {
+    setLoading(true);
 
-  const uploadCroppedImage = () => {};
+    //1 - upload image to storage
+    storageRef
+      .child("avatars/user-" + props.currentUser.uid)
+      .put(imageBlob, {
+        contentType: "image/jpeg",
+      })
+      .then((snap) => {
+        //get uploaded image url
+        snap.ref.getDownloadURL().then((downloadUrl) => {
+          //update user profile
+          firebase
+            .auth()
+            .currentUser.updateProfile({
+              photoURL: downloadUrl,
+            })
+            .then(() => {
+              //update user data in database
+              usersRef
+                .child(props.currentUser.uid)
+                .update({
+                  avatar: downloadUrl,
+                })
+                .then(() => {
+                  setLoading(false);
+                });
+            });
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
+  };
 
   const handleSignOut = () => {
     firebase
@@ -124,7 +161,8 @@ const UserPanel = (props) => {
         <Button
           color="green"
           disabled={!croppedImage}
-          onClick="uploadCroppedImage"
+          onClick={uploadCroppedImage}
+          loading={loading}
         >
           <Icon name="save" /> Save Avatar
         </Button>
