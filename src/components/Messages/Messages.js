@@ -215,6 +215,7 @@ const Messages = (props) => {
         currentUser={props.currentUser}
         isPrivateChannel={props.isPrivateChannel}
         getMessagesRef={getMessagesRef}
+        key={props.currentChanel && props.currentChanel.id}
       />
     </>
   );
