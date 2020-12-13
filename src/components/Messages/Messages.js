@@ -33,6 +33,9 @@ const Messages = (props) => {
   const [typingUsers, _setTypingUsers] = useState([]);
   const typingUsersStateRef = useRef(typingUsers);
 
+  //messages end ref
+  const messagesEndRef = useRef(null);
+
   const setTypingUsers = (users) => {
     typingUsersStateRef.current = users;
     _setTypingUsers(users);
@@ -248,6 +251,11 @@ const Messages = (props) => {
     }
   };
 
+  //scroll to bootim when new message
+  useEffect(() => {
+    messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   return (
     <>
       <MessagesHeader
@@ -268,6 +276,8 @@ const Messages = (props) => {
             typingUsers.map((user) => (
               <TypingIndicator key={user.id} username={user.name} />
             ))}
+
+          <div ref={messagesEndRef}></div>
         </Comment.Group>
       </Segment>
 
