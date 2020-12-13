@@ -7,6 +7,7 @@ import Message from "./Message";
 import firebase from "../../firebase";
 import { setUsersPosts } from "../../actions/userActions";
 import TypingIndicator from "./TypingIndicator";
+import MessageSkeleton from "./MessageSkeleton";
 
 // db messages ref
 const usersRef = firebase.database().ref("users");
@@ -130,6 +131,7 @@ const Messages = (props) => {
           loadedMessages.push(snapshot.val());
           setMessages([...loadedMessages]);
         });
+
       setLoading(false);
     },
     [getMessagesRef]
@@ -233,6 +235,14 @@ const Messages = (props) => {
       />
     ));
 
+  const displatMessagesSkeleton = () => (
+    <React.Fragment>
+      {[...Array(10)].map((_, i) => (
+        <MessageSkeleton key={i} />
+      ))}
+    </React.Fragment>
+  );
+
   const handleSearch = (e) => {
     setSearchLoading(true);
     setSearchTerm(e.target.value);
@@ -241,20 +251,20 @@ const Messages = (props) => {
 
   const renderMessages = () => {
     if (loading) {
-      return <span>loading messages...</span>;
-    } else if (messages.length === 0) {
-      return <span>No messages to show.</span>;
+      return displatMessagesSkeleton();
+    } else if (searchTerm) {
+      return displatMessages(searchResults);
     } else {
-      return searchTerm
-        ? displatMessages(searchResults)
-        : displatMessages(messages);
+      return displatMessages(messages);
     }
   };
 
   //scroll to bootim when new message
   useEffect(() => {
-    messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    if (!loading) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages, loading]);
 
   return (
     <>
