@@ -1,10 +1,11 @@
 import React from "react";
 
-const TypingIndicator = () => {
+const TypingIndicator = (props) => {
+  const { username } = props;
   return (
     <div style={{ display: "flex", alignItems: "center" }}>
-      <span className="user___typing">User is typing</span>
-      <div class="typing">
+      <span className="user___typing">{username} is typing</span>
+      <div className="typing">
         <span className="typing__dot"></span>
         <span className="typing__dot"></span>
         <span className="typing__dot"></span>
