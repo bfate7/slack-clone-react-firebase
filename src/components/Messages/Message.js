@@ -3,8 +3,11 @@ import { Comment, Image } from "semantic-ui-react";
 import moment from "moment";
 
 const Message = ({ user, message }) => {
-  const isOwnMessage = (message, user) =>
-    message.user.id === user.uid ? "message__self" : "";
+  const isOwnMessage = (message, user) => {
+    if (user && message) {
+      return message.user.id === user.uid ? "message__self" : "";
+    }
+  };
 
   const isImage = (message) =>
     message.hasOwnProperty("image") && !message.hasOwnProperty("content");
