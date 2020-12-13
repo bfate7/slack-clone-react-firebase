@@ -111,7 +111,8 @@ const UserPanel = (props) => {
       key: "user",
       text: (
         <span>
-          signed in as <strong>{props.currentUser.displayName}</strong>
+          signed in as
+          <strong>{props.currentUser && props.currentUser.displayName}</strong>
         </span>
       ),
       disabled: true,
@@ -191,8 +192,12 @@ const UserPanel = (props) => {
           <Dropdown
             trigger={
               <span>
-                <Image src={user.photoURL} spaced="right" avatar />
-                {user.displayName}
+                <Image
+                  src={props.currentUser && props.currentUser.photoURL}
+                  spaced="right"
+                  avatar
+                />
+                {props.currentUser && props.currentUser.displayName}
               </span>
             }
             options={dropdownoptions}
