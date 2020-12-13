@@ -10,6 +10,7 @@ import {
 //chanels firebase ref
 const chanelsRef = firebase.database().ref("chanels");
 const messagesRef = firebase.database().ref("messages");
+const typingRef = firebase.database().ref("typing");
 
 const Chanels = (props) => {
   const { setCurrentChanel } = props;
@@ -96,8 +97,12 @@ const Chanels = (props) => {
   const changeChanel = (chanel) => {
     //remove messages listner before changing channel
     //this is due to bug of reciving messages from another channel
-
     messagesRef.child(props.currentChanel.id).off();
+    //remove typing for current channel befor changing it
+    typingRef
+      .child(props.currentChanel.id)
+      .child(props.currentUser.uid)
+      .remove();
 
     props.setCurrentChanel(chanel);
     props.setPrivateChannel(false);
