@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import ProgressBar from "./ProgressBar";
 
 const storageRef = firebase.storage().ref();
+const typingRef = firebase.database().ref("typing");
 
 const MessagesForm = (props) => {
   const [message, setMessage] = useState("");
@@ -46,6 +47,10 @@ const MessagesForm = (props) => {
         .then(() => {
           setLoading(false);
           setMessage("");
+          typingRef
+            .child(props.currentChanel.id)
+            .child(props.currentUser.uid)
+            .remove();
         })
         .catch((err) => {
           console.log(err);
@@ -102,12 +107,27 @@ const MessagesForm = (props) => {
     });
   };
 
+  const handleKeyDown = () => {
+    if (message) {
+      typingRef
+        .child(props.currentChanel.id)
+        .child(props.currentUser.uid)
+        .set(props.currentUser.displayName);
+    } else {
+      typingRef
+        .child(props.currentChanel.id)
+        .child(props.currentUser.uid)
+        .remove();
+    }
+  };
+
   return (
     <Segment className="message__form">
       <Input
         fluid={true}
         name="message"
         onChange={(e) => setMessage(e.target.value)}
+        onKeyDown={handleKeyDown}
         value={message}
         style={{ marginBottom: "0.7em" }}
         label={<Button icon={"add"} />}
