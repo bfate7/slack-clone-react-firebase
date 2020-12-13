@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { connect } from "react-redux";
 import { Segment, Comment } from "semantic-ui-react";
 import MessagesHeader from "./MessagesHeader";
@@ -6,11 +6,14 @@ import MessagesForm from "./MessagesForm";
 import Message from "./Message";
 import firebase from "../../firebase";
 import { setUsersPosts } from "../../actions/userActions";
+import TypingIndicator from "./TypingIndicator";
 
 // db messages ref
 const usersRef = firebase.database().ref("users");
 const messagesRef = firebase.database().ref("messages");
 const privateMessagesRef = firebase.database().ref("privateMessages");
+const typingRef = firebase.database().ref("typing");
+const presenceRef = firebase.database().ref("presence");
 
 const Messages = (props) => {
   const { setUsersPosts } = props;
@@ -26,6 +29,14 @@ const Messages = (props) => {
   //isChannelStarred
   const [isChannelStarred, setIsChannelStarred] = useState(false);
   const [starredLoaded, setStarredLoaded] = useState(false);
+  //typingUsers
+  const [typingUsers, _setTypingUsers] = useState([]);
+  const typingUsersStateRef = useRef(typingUsers);
+
+  const setTypingUsers = (users) => {
+    typingUsersStateRef.current = users;
+    _setTypingUsers(users);
+  };
 
   const getMessagesRef = useCallback(() => {
     return props.isPrivateChannel ? privateMessagesRef : messagesRef;
@@ -106,25 +117,70 @@ const Messages = (props) => {
     countUsesPosts(messages);
   }, [countUsesPosts, messages]);
 
-  const addMessagelistner = useCallback(() => {
-    if (props.currentChanel) {
+  const addMessagelistner = useCallback(
+    (channelId) => {
       setMessages([]);
       const loadedMessages = [];
       getMessagesRef()
-        .child(props.currentChanel.id)
+        .child(channelId)
         .on("child_added", (snapshot) => {
           loadedMessages.push(snapshot.val());
           setMessages([...loadedMessages]);
         });
       setLoading(false);
-    }
-  }, [getMessagesRef, props.currentChanel]);
+    },
+    [getMessagesRef]
+  );
+
+  const addtypingListner = useCallback((channelId, userId) => {
+    //listern for typing user
+    const users = [];
+    typingRef.child(channelId).on("child_added", (snap) => {
+      if (snap.key !== userId) {
+        users.push({
+          id: snap.key,
+          name: snap.val(),
+        });
+      }
+      setTypingUsers(users);
+    });
+
+    //listern for typing user removed
+    typingRef.child(channelId).on("child_removed", (snap) => {
+      const index = typingUsersStateRef.current.findIndex(
+        (user) => user.id === snap.key
+      );
+      if (index !== -1) {
+        const updatedTypingUsers = typingUsersStateRef.current.filter(
+          (user) => user.id !== snap.key
+        );
+
+        setTypingUsers([...updatedTypingUsers]);
+      }
+    });
+
+    //remove user typing data when user goes offfline
+    presenceRef.on("child_removed", (snap) => {
+      typingRef.child(channelId).child(snap.key).remove();
+    });
+  }, []);
 
   const addListners = useCallback(() => {
-    if (props.currentChanel) {
-      addMessagelistner();
+    if (props.currentChanel && props.currentUser) {
+      addMessagelistner(props.currentChanel.id);
+      addtypingListner(props.currentChanel.id, props.currentUser.uid);
     }
-  }, [props.currentChanel, addMessagelistner]);
+
+    return () => {
+      messagesRef.off();
+      typingRef.off();
+    };
+  }, [
+    props.currentChanel,
+    props.currentUser,
+    addMessagelistner,
+    addtypingListner,
+  ]);
 
   useEffect(() => {
     addListners(props.currentChanel);
@@ -207,6 +263,11 @@ const Messages = (props) => {
       <Segment>
         <Comment.Group className="messages" style={{ marginBottom: "0.7em" }}>
           {renderMessages()}
+
+          {typingUsers.length > 0 &&
+            typingUsers.map((user) => (
+              <TypingIndicator key={user.id} username={user.name} />
+            ))}
         </Comment.Group>
       </Segment>
 
