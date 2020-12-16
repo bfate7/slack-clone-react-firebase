@@ -12,7 +12,7 @@ body,
 }
 
 .message__form {
-  position: fixed !important;
+  position: absolute !important;
   bottom: 1em;
   margin-left: 320px !important;
   left: 0;

@@ -290,14 +290,6 @@ const Messages = (props) => {
           <div ref={messagesEndRef}></div>
         </Comment.Group>
       </Segment>
-
-      <MessagesForm
-        currentChanel={props.currentChanel}
-        currentUser={props.currentUser}
-        isPrivateChannel={props.isPrivateChannel}
-        getMessagesRef={getMessagesRef}
-        key={props.currentChanel && props.currentChanel.id}
-      />
     </>
   );
 };

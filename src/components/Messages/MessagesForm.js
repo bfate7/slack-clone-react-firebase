@@ -155,7 +155,7 @@ const MessagesForm = (props) => {
   };
 
   return (
-    <Segment className="message__form">
+    <Segment>
       {emojiPicker && (
         <Picker
           set="apple"

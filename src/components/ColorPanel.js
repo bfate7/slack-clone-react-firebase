@@ -105,6 +105,18 @@ const ColorPanel = (props) => {
 
   return (
     <Sidebar as={Menu} inverted vertical visible width="very thin">
+      {props.isMobile ? (
+        <>
+          <Divider />
+          <Button
+            circular
+            size="small"
+            icon={props.isVisible ? "remove" : "add"}
+            color={props.isVisible ? "red" : "teal"}
+            onClick={props.toggleMenu}
+          />
+        </>
+      ) : null}
       <Divider />
       <Button size="small" icon="add" onClick={openModal} />
 
