@@ -192,7 +192,7 @@ const MessagesForm = (props) => {
           icon="edit"
           onClick={sendMessage}
           loading={loading}
-          disabled={loading}
+          disabled={loading || !props.currentChannel}
         />
         <Button
           color="teal"
@@ -200,7 +200,7 @@ const MessagesForm = (props) => {
           labelPosition="right"
           icon="cloud upload"
           onClick={() => setModal(true)}
-          disabled={uploadState}
+          disabled={uploadState || !props.currentChannel}
         />
       </Button.Group>
       <ProgressBar percentUpload={percentUpload} uploadState={uploadState} />
