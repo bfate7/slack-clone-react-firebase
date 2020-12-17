@@ -77,6 +77,12 @@ const ColorPanel = (props) => {
     if (props.currentUser) {
       addListners(props.currentUser.uid);
     }
+
+    //clear
+    return () => {
+      //remove listners
+      usersRef.child(props.currentUser.uid).child("colors").off();
+    };
   }, [addListners, props.currentUser]);
 
   const displayUserColors = (colors) =>
