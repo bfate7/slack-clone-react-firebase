@@ -98,12 +98,7 @@ const UserPanel = (props) => {
   };
 
   const handleSignOut = () => {
-    firebase
-      .auth()
-      .signOut()
-      .then(() => {
-        presenceRef.child(user.uid).remove();
-      });
+    presenceRef.child(user.uid).remove().then(firebase.auth().signOut());
   };
 
   const dropdownoptions = [
