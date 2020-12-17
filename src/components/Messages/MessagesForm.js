@@ -80,9 +80,9 @@ const MessagesForm = (props) => {
 
   const getUploadPath = () => {
     if (props.isPrivateChannel) {
-      return `chat/private-${props.currentChanel.id}`;
+      return `chat/private/${props.currentChanel.id}`;
     } else {
-      return `chat/public-${props.currentChanel.id}`;
+      return `chat/public/${props.currentChanel.id}`;
     }
   };
 

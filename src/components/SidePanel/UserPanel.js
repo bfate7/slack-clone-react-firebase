@@ -65,7 +65,7 @@ const UserPanel = (props) => {
 
     //1 - upload image to storage
     storageRef
-      .child("avatars/user-" + props.currentUser.uid)
+      .child(`avatars/users/${props.currentUser.uid}`)
       .put(imageBlob, {
         contentType: "image/jpeg",
       })
