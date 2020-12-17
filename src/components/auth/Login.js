@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import firebase from "../firebase";
+import firebase from "../../firebase";
 
 import {
   Grid,

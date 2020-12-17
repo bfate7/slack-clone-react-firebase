@@ -4,8 +4,8 @@ import {
   Switch,
   withRouter,
 } from "react-router-dom";
-import Login from "./components/Login";
-import Register from "./components/Register";
+import Login from "./components/auth/Login";
+import Register from "./components/auth/Register";
 import Main from "./components/Main";
 import { useEffect } from "react";
 import firebase from "./firebase";
