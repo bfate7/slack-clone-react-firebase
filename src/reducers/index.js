@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
 import userReducer from "./userReducer";
-import chanelReducer from "./chanelReduser";
+import channelReducer from "./channelReduser";
 
-export default combineReducers({ user: userReducer, chanel: chanelReducer });
+export default combineReducers({ user: userReducer, channel: channelReducer });

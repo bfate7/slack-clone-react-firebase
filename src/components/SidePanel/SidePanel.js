@@ -1,6 +1,6 @@
 import React from "react";
 import { Menu } from "semantic-ui-react";
-import Chanels from "./Chanels";
+import Channels from "./Channels";
 import UserPanel from "./UserPanel";
 import DirectMessages from "./DirectMessages";
 import Starred from "./Starred";
@@ -37,15 +37,15 @@ const SidePanel = (props) => {
       <UserPanel currentUser={props.currentUser} />
       <Starred
         currentUser={props.currentUser}
-        currentChanel={props.currentChanel}
+        currentChannel={props.currentChannel}
       />
-      <Chanels
+      <Channels
         currentUser={props.currentUser}
-        currentChanel={props.currentChanel}
+        currentChannel={props.currentChannel}
       />
       <DirectMessages
         currentUser={props.currentUser}
-        currentChanel={props.currentChanel}
+        currentChannel={props.currentChannel}
       />
     </Menu>
   );

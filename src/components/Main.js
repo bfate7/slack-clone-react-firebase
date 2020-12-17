@@ -50,21 +50,21 @@ const Main = (props) => {
         isVisible={side}
         isMobile={isMobile}
         currentUser={props.currentUser}
-        currentChanel={props.currentChanel}
+        currentChannel={props.currentChannel}
         userColors={props.userColors}
       />
       <Grid.Column
         style={!isMobile ? { marginLeft: "320px" } : { marginLeft: "60px" }}
       >
         <Messages
-          currentChanel={props.currentChanel}
+          currentChannel={props.currentChannel}
           currentUser={props.currentUser}
           isPrivateChannel={props.isPrivateChannel}
           getMessagesRef={getMessagesRef}
           isMobile={isMobile}
         />
         <MessagesForm
-          currentChanel={props.currentChanel}
+          currentChannel={props.currentChannel}
           currentUser={props.currentUser}
           isPrivateChannel={props.isPrivateChannel}
           getMessagesRef={getMessagesRef}
@@ -74,9 +74,9 @@ const Main = (props) => {
         style={isTablet ? { display: "none" } : { display: "block" }}
       >
         <MetaPanel
-          currentChanel={props.currentChanel}
+          currentChannel={props.currentChannel}
           isPrivateChannel={props.isPrivateChannel}
-          key={props.currentChanel && props.currentChanel.id}
+          key={props.currentChannel && props.currentChannel.id}
           usersPosts={props.usersPosts}
         />
       </Grid.Column>
@@ -87,8 +87,8 @@ const mapStateToProps = (state) => ({
   currentUser: state.user.currentUser,
   usersPosts: state.user.usersPosts,
   userColors: state.user.userColors,
-  currentChanel: state.chanel.currentChanel,
-  isPrivateChannel: state.chanel.isPrivate,
+  currentChannel: state.channel.currentChannel,
+  isPrivateChannel: state.channel.isPrivate,
 });
 
 export default connect(mapStateToProps)(Main);

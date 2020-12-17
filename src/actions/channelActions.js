@@ -1,8 +1,8 @@
 import * as actionTypes from "./types";
 
-export const setCurrentChanel = (chanel) => ({
-  type: actionTypes.SET_CURRENT_CHANEL,
-  payload: chanel,
+export const setCurrentChannel = (channel) => ({
+  type: actionTypes.SET_CURRENT_CHANNEL,
+  payload: channel,
 });
 
 export const setPrivateChannel = (isPrivateChannel) => ({

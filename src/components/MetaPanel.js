@@ -41,9 +41,9 @@ const MetaPanel = (props) => {
 
   if (props.isPrivateChannel) return null;
   return (
-    <Segment loading={!props.currentChanel}>
+    <Segment loading={!props.currentChannel}>
       <Header as="h3" attached="top">
-        about #{props.currentChanel && props.currentChanel.name}
+        about #{props.currentChannel && props.currentChannel.name}
       </Header>
       <Accordion attached>
         <Accordion.Title
@@ -56,7 +56,7 @@ const MetaPanel = (props) => {
           Channel Details
         </Accordion.Title>
         <Accordion.Content active={activeIndex === 0}>
-          {props.currentChanel && props.currentChanel.details}
+          {props.currentChannel && props.currentChannel.details}
         </Accordion.Content>
       </Accordion>
 
@@ -88,10 +88,12 @@ const MetaPanel = (props) => {
         <Accordion.Content active={activeIndex === 2}>
           <Header as="h3">
             <Image
-              src={props.currentChanel && props.currentChanel.createdBy.avatar}
+              src={
+                props.currentChannel && props.currentChannel.createdBy.avatar
+              }
               circular
             />
-            {props.currentChanel && props.currentChanel.createdBy.user}
+            {props.currentChannel && props.currentChannel.createdBy.user}
           </Header>
         </Accordion.Content>
       </Accordion>

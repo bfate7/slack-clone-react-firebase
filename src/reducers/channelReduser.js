@@ -1,17 +1,17 @@
 import * as actionTypes from "../actions/types";
 
 const initiaState = {
-  currentChanel: null,
+  currentChannel: null,
   isPrivate: false,
 };
 
-const chanelReducer = (state = initiaState, action) => {
+const channelReducer = (state = initiaState, action) => {
   const { type, payload } = action;
   switch (type) {
-    case actionTypes.SET_CURRENT_CHANEL:
+    case actionTypes.SET_CURRENT_CHANNEL:
       return {
         ...state,
-        currentChanel: payload,
+        currentChannel: payload,
       };
 
     case actionTypes.SET_PRIVATE_CHANNEL:
@@ -25,4 +25,4 @@ const chanelReducer = (state = initiaState, action) => {
   }
 };
 
-export default chanelReducer;
+export default channelReducer;

@@ -3,8 +3,8 @@ import { connect } from "react-redux";
 import { Icon, Menu } from "semantic-ui-react";
 import {
   setPrivateChannel,
-  setCurrentChanel,
-} from "../../actions/chanelActions";
+  setCurrentChannel,
+} from "../../actions/channelActions";
 import firebase from "../../firebase";
 
 const usersRef = firebase.database().ref("users");
@@ -18,22 +18,22 @@ const Starred = (props) => {
     _setStarredChannels(channels);
   };
 
-  const StarredChanelsList = () =>
+  const StarredChannelsList = () =>
     starredChannels.length > 0 &&
-    starredChannels.map((chanel) => (
+    starredChannels.map((channel) => (
       <Menu.Item
-        key={chanel.id}
-        name={chanel.name}
+        key={channel.id}
+        name={channel.name}
         style={{ opavity: "0.8" }}
-        onClick={() => changeChanel(chanel)}
-        active={props.currentChanel && props.currentChanel.id === chanel.id}
+        onClick={() => changeChannel(channel)}
+        active={props.currentChannel && props.currentChannel.id === channel.id}
       >
-        # {chanel.name}
+        # {channel.name}
       </Menu.Item>
     ));
 
-  const changeChanel = (channel) => {
-    props.setCurrentChanel(channel);
+  const changeChannel = (channel) => {
+    props.setCurrentChannel(channel);
     props.setPrivateChannel(false);
   };
 
@@ -72,9 +72,9 @@ const Starred = (props) => {
           <Icon name="star" /> Starred ({starredChannels.length})
         </span>
       </Menu.Item>
-      <StarredChanelsList />
+      <StarredChannelsList />
     </Menu.Menu>
   );
 };
 
-export default connect(null, { setCurrentChanel, setPrivateChannel })(Starred);
+export default connect(null, { setCurrentChannel, setPrivateChannel })(Starred);

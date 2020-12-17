@@ -3,9 +3,9 @@ import { connect } from "react-redux";
 import { Icon, Menu } from "semantic-ui-react";
 import firebase from "../../firebase";
 import {
-  setCurrentChanel,
+  setCurrentChannel,
   setPrivateChannel,
-} from "../../actions/chanelActions";
+} from "../../actions/channelActions";
 
 const usersRef = firebase.database().ref("users");
 const connectedRef = firebase.database().ref(".info/connected");
@@ -116,7 +116,7 @@ const DirectMessages = (props) => {
       id: channelId,
       name: user.username,
     };
-    props.setCurrentChanel(channelData);
+    props.setCurrentChannel(channelData);
     props.setPrivateChannel(true);
     setActiveChannel(user.uid);
   };
@@ -144,6 +144,6 @@ const DirectMessages = (props) => {
   );
 };
 
-export default connect(null, { setCurrentChanel, setPrivateChannel })(
+export default connect(null, { setCurrentChannel, setPrivateChannel })(
   DirectMessages
 );

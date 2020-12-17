@@ -9,7 +9,7 @@ const MessagesHeader = (props) => {
   return (
     <Segment clearing>
       <Header as="h3" floated="left">
-        {props.currentChanel && displayChannelName(props.currentChanel)}
+        {props.currentChannel && displayChannelName(props.currentChannel)}
 
         {!props.isPrivateChannel && (
           <span>

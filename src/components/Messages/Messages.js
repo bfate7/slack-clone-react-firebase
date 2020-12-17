@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback, useRef } from "react";
 import { connect } from "react-redux";
 import { Segment, Comment } from "semantic-ui-react";
 import MessagesHeader from "./MessagesHeader";
-import MessagesForm from "./MessagesForm";
 import Message from "./Message";
 import firebase from "../../firebase";
 import { setUsersPosts } from "../../actions/userActions";
@@ -48,18 +47,18 @@ const Messages = (props) => {
 
   const handleStar = () => {
     if (starredLoaded) {
-      starChannel(!isChannelStarred, props.currentChanel, props.currentUser);
+      starChannel(!isChannelStarred, props.currentChannel, props.currentUser);
     }
   };
 
-  const starChannel = useCallback((isStarred, currentChanel, currentUser) => {
+  const starChannel = useCallback((isStarred, currentChannel, currentUser) => {
     if (isStarred) {
       setIsChannelStarred(true);
       usersRef
         .child(currentUser.uid)
         .child("starred")
         .update({
-          [currentChanel.id]: { ...currentChanel },
+          [currentChannel.id]: { ...currentChannel },
         })
         .catch((err) => {
           setIsChannelStarred(false);
@@ -69,7 +68,7 @@ const Messages = (props) => {
       usersRef
         .child(currentUser.uid)
         .child("starred")
-        .child(currentChanel.id)
+        .child(currentChannel.id)
         .remove()
         .catch((err) => {
           setIsChannelStarred(true);
@@ -78,7 +77,7 @@ const Messages = (props) => {
   }, []);
 
   useEffect(() => {
-    if (props.currentUser && props.currentChanel) {
+    if (props.currentUser && props.currentChannel) {
       usersRef
         .child(props.currentUser.uid)
         .child("starred")
@@ -86,7 +85,7 @@ const Messages = (props) => {
         .then((snap) => {
           if (snap.val()) {
             const ids = Object.keys(snap.val());
-            const isStarred = ids.includes(props.currentChanel.id);
+            const isStarred = ids.includes(props.currentChannel.id);
             setIsChannelStarred(isStarred);
           } else {
             setIsChannelStarred(false);
@@ -95,7 +94,7 @@ const Messages = (props) => {
           setStarredLoaded(true);
         });
     }
-  }, [props.currentChanel, props.currentUser, starChannel, setStarredLoaded]);
+  }, [props.currentChannel, props.currentUser, starChannel, setStarredLoaded]);
 
   const countUsesPosts = useCallback(
     (messages) => {
@@ -171,9 +170,9 @@ const Messages = (props) => {
   }, []);
 
   const addListners = useCallback(() => {
-    if (props.currentChanel && props.currentUser) {
-      addMessagelistner(props.currentChanel.id);
-      addtypingListner(props.currentChanel.id, props.currentUser.uid);
+    if (props.currentChannel && props.currentUser) {
+      addMessagelistner(props.currentChannel.id);
+      addtypingListner(props.currentChannel.id, props.currentUser.uid);
     }
 
     return () => {
@@ -181,18 +180,18 @@ const Messages = (props) => {
       typingRef.off();
     };
   }, [
-    props.currentChanel,
+    props.currentChannel,
     props.currentUser,
     addMessagelistner,
     addtypingListner,
   ]);
 
   useEffect(() => {
-    addListners(props.currentChanel);
+    addListners(props.currentChannel);
     return () => {
       messagesRef.off();
     };
-  }, [props.currentChanel, addListners]);
+  }, [props.currentChannel, addListners]);
 
   const runSearch = useCallback(() => {
     if (searchTerm) {
@@ -269,7 +268,7 @@ const Messages = (props) => {
   return (
     <>
       <MessagesHeader
-        currentChanel={props.currentChanel}
+        currentChannel={props.currentChannel}
         countUniqueUsers={numUsers}
         handleSearch={handleSearch}
         searchLoading={searchLoading}

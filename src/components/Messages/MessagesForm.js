@@ -49,14 +49,14 @@ const MessagesForm = (props) => {
       setLoading(true);
       props
         .getMessagesRef()
-        .child(props.currentChanel.id)
+        .child(props.currentChannel.id)
         .push()
         .set(createMessage())
         .then(() => {
           setLoading(false);
           setMessage("");
           typingRef
-            .child(props.currentChanel.id)
+            .child(props.currentChannel.id)
             .child(props.currentUser.uid)
             .remove();
         })
@@ -69,7 +69,7 @@ const MessagesForm = (props) => {
   const sendFileMessage = (fileURL) => {
     props
       .getMessagesRef()
-      .child(props.currentChanel.id)
+      .child(props.currentChannel.id)
       .push()
       .set(createMessage(fileURL))
       .then(() => {})
@@ -80,9 +80,9 @@ const MessagesForm = (props) => {
 
   const getUploadPath = () => {
     if (props.isPrivateChannel) {
-      return `chat/private/${props.currentChanel.id}`;
+      return `chat/private/${props.currentChannel.id}`;
     } else {
-      return `chat/public/${props.currentChanel.id}`;
+      return `chat/public/${props.currentChannel.id}`;
     }
   };
 
@@ -118,12 +118,12 @@ const MessagesForm = (props) => {
   const handleKeyDown = () => {
     if (message) {
       typingRef
-        .child(props.currentChanel.id)
+        .child(props.currentChannel.id)
         .child(props.currentUser.uid)
         .set(props.currentUser.displayName);
     } else {
       typingRef
-        .child(props.currentChanel.id)
+        .child(props.currentChannel.id)
         .child(props.currentUser.uid)
         .remove();
     }
