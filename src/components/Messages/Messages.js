@@ -123,6 +123,7 @@ const Messages = (props) => {
   const addMessagelistner = useCallback(
     (channelId) => {
       setMessages([]);
+
       const loadedMessages = [];
       getMessagesRef()
         .child(channelId)
@@ -224,7 +225,7 @@ const Messages = (props) => {
     setNumUsers(uniqueUsers.length);
   };
 
-  const displatMessages = (msgs) =>
+  const displayMessages = (msgs) =>
     msgs.length > 0 &&
     msgs.map((message) => (
       <Message
@@ -234,7 +235,7 @@ const Messages = (props) => {
       />
     ));
 
-  const displatMessagesSkeleton = () => (
+  const displayMessagesSkeleton = () => (
     <React.Fragment>
       {[...Array(10)].map((_, i) => (
         <MessageSkeleton key={i} />
@@ -250,11 +251,13 @@ const Messages = (props) => {
 
   const renderMessages = () => {
     if (loading) {
-      return displatMessagesSkeleton();
-    } else if (searchTerm) {
-      return displatMessages(searchResults);
+      return displayMessagesSkeleton();
     } else {
-      return displatMessages(messages);
+      if (messages.length > 0) {
+        return searchTerm
+          ? displayMessages(searchResults)
+          : displayMessages(messages);
+      }
     }
   };
 
