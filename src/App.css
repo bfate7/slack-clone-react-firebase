@@ -105,3 +105,19 @@ body,
     opacity: 0;
   }
 }
+
+.login__bg {
+  background: url("./images/developers\ team.jpg") no-repeat;
+  background-size: cover;
+}
+
+.login__card,
+.register__card {
+  background-color: white;
+  border-radius: 8px;
+}
+
+.register__bg {
+  background: url("./images/team\ working.jpg") no-repeat;
+  background-size: cover;
+}

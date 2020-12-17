@@ -48,8 +48,8 @@ const Login = () => {
       });
   };
   return (
-    <Grid textAlign="center" verticalAlign="middle" className="app">
-      <Grid.Column style={{ maxWidth: "450px" }}>
+    <Grid textAlign="center" verticalAlign="middle" className="app login__bg ">
+      <Grid.Column style={{ maxWidth: "450px" }} className="login__card">
         <Header as="h2" icon color="blue" textAlign="center">
           <Icon name="code" color="blue" />
           Register for DevChat
