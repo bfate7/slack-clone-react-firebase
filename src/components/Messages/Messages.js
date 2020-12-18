@@ -168,6 +168,8 @@ const Messages = (props) => {
     presenceRef.on("child_removed", (snap) => {
       typingRef.child(channelId).child(snap.key).remove();
     });
+
+    typingRef.child(channelId).child(userId).onDisconnect().remove();
   }, []);
 
   const addListners = useCallback(() => {
