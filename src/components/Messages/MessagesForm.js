@@ -54,6 +54,7 @@ const MessagesForm = (props) => {
         .set(createMessage())
         .then(() => {
           setLoading(false);
+          setEmojiePicker(false);
           setMessage("");
           typingRef
             .child(props.currentChannel.id)
@@ -155,7 +156,7 @@ const MessagesForm = (props) => {
   };
 
   return (
-    <Segment>
+    <Segment className="message__form">
       {emojiPicker && (
         <Picker
           set="apple"
