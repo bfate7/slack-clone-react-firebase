@@ -52,7 +52,7 @@ const Login = () => {
       <Grid.Column style={{ maxWidth: "450px" }} className="login__card">
         <Header as="h2" icon color="blue" textAlign="center">
           <Icon name="code" color="blue" />
-          Register for DevChat
+          Login to DevChat
         </Header>
         <Form size="large" onSubmit={handleSubmit}>
           <Segment>
