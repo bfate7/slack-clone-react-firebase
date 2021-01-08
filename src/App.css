@@ -8,6 +8,7 @@ body,
 }
 
 .messages {
+  min-height: 50vh;
   max-height: 50vh;
   overflow-y: scroll;
   margin-bottom: 0.6em;
@@ -107,10 +108,10 @@ body,
   }
 }
 
-.login__bg {
+/* .login__bg {
   background: url("./images/developers\ team.jpg") no-repeat;
   background-size: cover;
-}
+} */
 
 .login__card,
 .register__card {
@@ -118,7 +119,7 @@ body,
   border-radius: 8px;
 }
 
-.register__bg {
+/* .register__bg {
   background: url("./images/team\ working.jpg") no-repeat;
   background-size: cover;
-}
+} */
