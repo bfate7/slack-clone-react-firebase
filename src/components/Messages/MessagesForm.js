@@ -157,16 +157,17 @@ const MessagesForm = (props) => {
 
   return (
     <Segment className="message__form">
-      {emojiPicker && (
-        <Picker
-          set="apple"
-          title="pick your emoji"
-          emoji="point_up"
-          style={{ marginBottom: "1em" }}
-          onSelect={handleAddEmoji}
-        />
-      )}
-
+      <div className="picker__container">
+        {emojiPicker && (
+          <Picker
+            set="apple"
+            title="pick your emoji"
+            emoji="point_up"
+            style={{ marginBottom: "1em" }}
+            onSelect={handleAddEmoji}
+          />
+        )}
+      </div>
       <Input
         fluid={true}
         name="message"

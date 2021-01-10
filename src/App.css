@@ -7,6 +7,14 @@ body,
   padding: 1em;
 }
 
+@media screen and (max-width: 480px) {
+  .picker__container {
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+  }
+}
+
 .messages {
   min-height: 50vh;
   max-height: 50vh;
